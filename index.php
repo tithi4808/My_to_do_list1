@@ -22,6 +22,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['title']) && !empty($_
 }
 
 ?>
+<?php
+include 'dbconn.php';
+
+
+// Assuming user is logged in and their user1_id is stored in the session
+if (isset($_SESSION['user1_id'])) {
+    $user_id = $_SESSION['user1_id'];
+
+    // Query to get user's full name from the users1 table
+    $stmt = $conn->prepare("SELECT first_name, last_name,email,date_of_birth FROM users1 WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Check if user exists
+    if ($user) {
+        $first_name = $user['first_name'];
+        $last_name = $user['last_name'];
+        $email=$user['email'];
+        $date_of_birth=$user['date_of_birth'];
+    } else {
+        // Handle user not found
+        die("User not found.");
+    }
+} else {
+    // Redirect to login page if the user is not logged in
+    header("Location: login.php");
+    exit();
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['title']) && !empty($_
     <main class="bg-gray-100 h-screen">
         <div class="grid grid-cols-4 h-full">
             <div class="col-span-1 bg-gray-300 h-full">
-                <h1>hello</h1>
+                <h1 class="my-2 text-2xl font-bold text-center">Hello</h1>
+                <p class="text-center"><?php echo htmlspecialchars($first_name . ' ' . $last_name); ?></p>
+                <p class="text-center"><?php echo htmlspecialchars($email); ?></p>
+                <p class="text-center">Date Of Birth: <?php echo htmlspecialchars($date_of_birth); ?></p>
                 <div class="mx-6 my-10 h-4">
                     <hr>
                 </div>
