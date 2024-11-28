@@ -33,25 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body >
   <header>
-  <nav>
-            <div class="navbar bg-blue-950">
-            <div class="navbar-start ">
-            <a class="btn btn-ghost text-xl"><Span class="font-bold text-3xl text-yellow-300">Task</Span><span class="mt-2 text-orange-50">Nest</span></a>
-            
-            </div>
-            <div class="navbar-end">
-            <ul class="menu menu-horizontal px-1 text-orange-50 text-lg">
-            
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact us</a></li>
-            <li><a href="register.php">Sign up</a></li>
-            <li><a href="admin_login.php">Admin</a></li>
-            
-            
-            </ul>
-        </div>
-        </div>
-        </nav>
+  
 
   </header>
   <main >
