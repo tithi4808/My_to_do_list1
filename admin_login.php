@@ -40,29 +40,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
 <header>
-    <nav>
-        <div class="navbar bg-blue-950">
+<nav class="navbar bg-white">
             <div class="navbar-start">
-                <a class="btn btn-ghost text-xl">
-                    <span class="font-bold text-3xl text-yellow-300">Task</span><span class="mt-2 text-orange-50">Nest</span>
-                </a>
+                <a class="btn btn-ghost text-xl"><span class="font-bold text-3xl text-orange-600">Task</span><span class="mt-2 text-black font-bold">Nest</span></a>
             </div>
             <div class="navbar-end">
-                <ul class="menu menu-horizontal px-1 text-orange-50 text-lg">
-                    <li><a href="about.php">About us</a></li>
-                    <li><a href="contact.php">Contact us</a></li>
-                    <li><a href="register.php">User Registration</a></li>
+                <ul class="menu menu-horizontal px-1 text-orange-600 font-bold text-base">
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="login.php">Login</a></li>
+                    <li><a href="register.php">Register</a></li>
                     <li><a href="admin_login.php">Admin</a></li>
                 </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
 </header>
 
 <main>
     <div class="hero min-h-screen bg-base-100">
         <div class="hero-content flex-col">
-            <h1 class="text-4xl text-blue-950 font-bold mb-2">Admin Login</h1>
+            <h1 class="text-3xl text-blue-950 font-bold mb-2">Log in as a Admin</h1>
 
             <!-- Form for Admin Login -->
             <form action="admin_login.php" method="POST" class="card shadow-xl bg-white p-8">

@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check if user exists and verify password
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user1_id'] = $user['id']; // Store user ID in session
-        header("Location: index.php"); // Redirect to index.php on successful login
+        header("Location: home.php"); // Redirect to index.php on successful login
         exit;
     } else {
         $error = "Invalid email or password.";

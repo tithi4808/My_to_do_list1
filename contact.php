@@ -1,12 +1,4 @@
-<?php
-session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['user1_id'])) {
-    // Redirect to login if not logged in
-    header("Location: login.php");
-    exit();
-}
 
 include 'dbconn.php';
 

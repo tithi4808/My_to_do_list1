@@ -1,54 +1,22 @@
 <?php 
 include 'dbconn.php';
 session_start();
-if (isset($_SESSION['user1_id'])) {
-    $user_id = $_SESSION['user1_id'];
 
+$successMessage = '';  // Initialize a variable for the success message
+$messageContent = '';  // Initialize a variable for the message content
 
-} else {
-    // Redirect to login page or handle the case where the user is not logged in
-    header("Location: login.php");
-    exit();
-} // Assuming 'user_id' is set on login
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['message'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
 
+    // Insert the message into the database
+    $stmt = $conn->prepare("INSERT INTO messages (name, email, message) VALUES (?, ?, ?)");
+    $stmt->execute([$name, $email, $message]);
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['title']) && !empty($_POST['description'])) {
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    
-    $stmt = $conn->prepare("INSERT INTO todo (title, description, date_time, user_id) VALUES (?, ?, NOW(), ?)");
-    $stmt->execute([$title, $description, $user_id]);
-}
-
-?>
-<?php
-include 'dbconn.php';
-
-
-// Assuming user is logged in and their user1_id is stored in the session
-if (isset($_SESSION['user1_id'])) {
-    $user_id = $_SESSION['user1_id'];
-
-    // Query to get user's full name from the users1 table
-    $stmt = $conn->prepare("SELECT first_name, last_name,email,date_of_birth FROM users1 WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Check if user exists
-    if ($user) {
-        $first_name = $user['first_name'];
-        $last_name = $user['last_name'];
-        $email=$user['email'];
-        $date_of_birth=$user['date_of_birth'];
-    } else {
-        // Handle user not found
-        die("User not found.");
-    }
-} else {
-    // Redirect to login page if the user is not logged in
-    header("Location: login.php");
-    exit();
+    // Set the success message
+    $successMessage = "Thank you for contacting us! We will get back to you soon.";
+    $messageContent = nl2br(htmlspecialchars($message));  // Display the submitted message content
 }
 ?>
 
@@ -60,166 +28,191 @@ if (isset($_SESSION['user1_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
     <title>Home</title>
+    
 </head>
-<body class="">
+<body>
     <header>
-        <nav>
-            <div class="navbar bg-blue-950">
-            <div class="navbar-start ">
-            <a class="btn btn-ghost text-xl"><Span class="font-bold text-3xl text-yellow-300">Task</Span><span class="mt-2 text-orange-50">Nest</span></a>
-            
+        <nav class="navbar bg-white">
+            <div class="navbar-start">
+                <a class="btn btn-ghost text-xl"><span class="font-bold text-3xl text-orange-600">Task</span><span class="mt-2 text-black font-bold">Nest</span></a>
             </div>
             <div class="navbar-end">
-            <ul class="menu menu-horizontal px-1 text-orange-50 text-lg">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact us</a></li>
-            <li><a href="logout.php">Logout</a></li>
-            
-            </ul>
-        </div>
-        </div>
+                <ul class="menu menu-horizontal px-1 text-orange-600 font-bold text-base">
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="#about">About us</a></li>
+                    <li><a href="#contact">Contact us</a></li>
+                    <li><a href="login.php">Login</a></li>
+                    <li><a href="register.php">Register</a></li>
+                    <li><a href="admin_login.php">Admin</a></li>
+                </ul>
+            </div>
         </nav>
-
+        <div>
+            <img class=" w-full" src="https://i.postimg.cc/jjYRWtBq/bannert.jpg" alt="">
+        </div>
     </header>
-    <body class="h-full">
-    <main class="bg-gray-100 h-screen">
-        <div class="grid grid-cols-4 h-full">
-            <div class="col-span-1 bg-gray-300 h-full">
-                <h1 class="my-2 text-2xl font-bold text-center">Hello</h1>
-                <p class="text-center"><?php echo htmlspecialchars($first_name . ' ' . $last_name); ?></p>
-                <p class="text-center"><?php echo htmlspecialchars($email); ?></p>
-                <p class="text-center">Date Of Birth: <?php echo htmlspecialchars($date_of_birth); ?></p>
-                <div class="mx-6 my-10 h-4">
-                    <hr>
-                </div>
-                <div class="mt-4 mx-8 ">
-                    <h1 class="font-bold text-xl text-blue-950 text-center">Write your tasks here</h1>
-                <form action="" method="POST" class='p-2   rounded-xl'>
-                        <input type="text" name="title" class="w-full h-12 p-2 border border-gray-300 rounded-xl" placeholder="Please Enter Your Task Title">
-                        <textarea name="description" class="w-full h-24 p-2 border border-gray-300 rounded-md" placeholder="Please Enter Your Task Description" required></textarea>
-                        <div class="flex justify-center"><button type="submit" class="bg-blue-950 text-orange-50 justify-end rounded-xl px-4 h-8 w-full">Add task</button></div>
-                    </form>
-                </div>
+
+    <main >
+       <section>
+        <div class="container mx-auto px-6 max-w-6xl">
+        <!-- About Us Heading -->
+         
+        <div class="grid grid-cols-2 gap-4 mt-16">
+            <div>
+                <img src="" alt="">
             </div>
-            <div class="col-span-3 bg-gray-100 pb-10 h-full flex flex-col px-4">
-                
-                <div class="grid grid-cols-3 gap-x-2 gap-y-8 mt-10">
+        <div class="text-center mb-12">
+            <h1 id="about" class="text-3xl font-bold text-end text-black mb-6">Welcome to <span class="text-orange-600">Task</span>Nest</h1>
+            <div><hr></div>
+            <p class="text-base  text-start mt-2 text-gray-700">TaskNest is a simple, yet powerful task management platform. It allows you to manage your to-do lists, create and update tasks, and delete tasks when they're completed. You can even register, log in, and manage your tasks across multiple devices.</p>
+        </div>
+        </div>
 
-                <?php
-                        $todo = $conn->prepare('SELECT * FROM todo WHERE user_id = ? ORDER BY id DESC');
-                        $todo->execute([$user_id]);
-                        if (!$todo) {
-                            die("Query failed: " . implode(", ", $conn->errorInfo()));
-                        }
+        <div class="grid grid-cols-2 gap-4 mt-16">
+           
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-start text-black mb-6">Why Choose <span class="text-orange-600">Task</span>Nest</h1>
+            <div><hr></div>
+            <div class="text-base  text-start mt-2 text-gray-700">In a world full of distractions, TaskNest helps you stay organized, productive, and stress-free. Here’s why TaskNest stands out:
 
-                        while ($row = $todo->fetch(PDO::FETCH_ASSOC)) {
-                    ?>
-                        <div class="bg-gray-400 w-60 h-52 border-1 border-blue-950 p-4 rounded-xl shadow-md  items-center justify-between mt-4">
-                            <div class=" items-center">
-                                
-                            </div>
-                            <div class="mt-4  bg-yellow-50 p-4 rounded-xl shadow-md  left-2 relative w-60" style="height: 200px;"> <!-- Example height for the box -->
-                                    <div>
-                                        <input type="checkbox" class="mr-2">
-                                        <span class="font-bold text-xl text-yellow-800"><?php echo $row['title']; ?></span>
-                                        </div>
-                                        <div class="my-2 mx-2">
-                                            <hr>
-                                        </div>
-                                        <p class="mt-2"><?php echo htmlspecialchars($row['description']); ?></p>
-                                        
-                                        <p class="text-sm absolute bottom-8 right-2 ">Created- <?php echo $row['date_time']; ?></p>
-                                    <div class="absolute bottom-0 right-0 flex items-end justify-end mb-2 mr-2">
-
-                                    <form action="update_task.php" method="GET" class="inline">
-                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                            <button type="submit" class="flex items-end rounded-md px-2 ml-2">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </form>
-                                        <form action="delete_task.php" method="POST" class="inline">
-                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                            <button type="submit" class="flex items-end rounded-md px-2 ml-2">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                        </div>
-                    <?php
-                    }
-
-                ?>
-                
-
-
-                </div>
+<div class="my-2"><p><span class="font-bold">✅ Smart Task Management –</span> Easily create, prioritize, and track your tasks.</p>
+<p><span class="font-bold">✅ Intuitive & User-Friendly –</span> A clean, distraction-free interface designed for efficiency.</p>
+<p><span class="font-bold">✅ Reminders & Notifications –</span> Never miss a deadline with automatic alerts.</p>
+<p><span class="font-bold">✅ Collaboration Made Easy –</span> Share tasks and projects with teams or family.</p>
+<p><span class="font-bold">✅ Cross-Platform Access –</span> Sync your tasks seamlessly across web and mobile.</p>
+<p><span class="font-bold">✅ Customization & Flexibility –</span> Set recurring tasks, choose themes, and personalize your workflow.</p>
+</div>
+Whether you’re a professional, student, or entrepreneur, TaskNest is your ultimate productivity companion. Stay ahead, stay organized! </div>
+        </div>
+        <div class="flex item-center justify-center px-4 py-12">
+                <img class="rounded-xl" src="https://i.postimg.cc/LsMkXgTy/Whats-App-Image-2025-02-20-at-12-58-39-0d860e81.jpg" alt="">
             </div>
         </div>
+
+
+        <!-- Features of TaskNest -->
+        
+        <div class="grid grid-cols-2 gap-4 mt-16">
+            <div>
+                <img src="" alt="">
+            </div>
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-end text-black mb-6 mr-8"> <span class="text-orange-600">Task</span>Nest Features
+            </h1>
+            <div><hr></div>
+            <div class="text-start font-semibold mt-2" >
+            TaskNest is designed to make task management simple, efficient, and smart. Here’s what makes it stand out:
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">📝 Easy Task Management –</span> Create, edit, delete, and organize tasks effortlessly.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">⏰ Reminders & Notifications – </span>Set due dates and receive timely alerts.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">📊 Progress Tracking –</span> Monitor completed and pending tasks with visual indicators.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">🔄 Recurring Tasks –</span> Automate daily, weekly, or monthly tasks for consistency.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">🤝 Collaboration & Sharing –</span> Assign tasks, share projects, and work as a team.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">🌙 Dark & Light Mode –</span> Customize the interface for a comfortable experience.
+            </p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">📱 Cross-Platform Sync –</span> Access tasks on any device, anytime, anywhere</p>
+            <p class="text-base  text-start mt-2 text-gray-700"><span class="font-bold">💡 Smart Prioritization –</span> Set priorities and focus on what matters most.
+            </p>
+
+            </div>
+        </div>
+        </div>
+           
+        <div class="grid grid-cols-2 gap-4 mt-16">
+        <div class="text-start ">
+            <h2 class="text-3xl font-semibold text-black mb-4">Get Started with <span class="text-orange-600">Task</span>Nest</h2>
+            <div><hr></div>
+            <p class="text-base text-gray-700 mb-4">
+                It's easy to get started! Simply register for an account or log in if you're already a member. Once you're in, you can start creating tasks, managing your to-do list, and stay on top of your goals.
+            </p>
+            <a href="register.php" class="btn bg-orange-600 text-orange-50 hover:bg-blue-700">Register Now</a>
+        </div>
+        <div>
+
+        </div>
+        </div> 
+
+           
+        </div>
+
+        <!-- Getting Started Section -->
+        
+    
+    </div>
+        
+   
+       </section>
+       <section>
+       <main class="py-12">
+    <div id="contact" class="container mt-10 border-2  py-6 mx-auto px-6 max-w-5xl">
+        <div class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-orange-600 mb-6">Send Us a Message</h1>
+            <p class="text-lg text-gray-700">Have a question or want to share feedback? Use the form below to send a message directly to our admin.</p>
+        </div>
+        <div class="text-center mb-12"><?php if (!empty($successMessage)): ?>
+            
+            <p class="text-orange-500"><?php echo $successMessage; ?></p>
+            
+        
+    <?php endif; ?></div>
+
+        <!-- Contact Form -->
+        <form action="index.php" method="POST" class="space-y-4">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <!-- Name Input -->
+                <div class="flex-1">
+                    <label for="name" class="block text-lg">Your Name</label>
+                    <input type="text" name="name" id="name" required class="input input-bordered w-full bg-gray-50 text-gray-700" />
+                </div>
+                <!-- Email Input -->
+                <div class="flex-1">
+                    <label for="email" class="block text-lg">Your Email</label>
+                    <input type="email" name="email" id="email" required class="input input-bordered w-full bg-gray-50 text-gray-700" />
+                </div>
+            </div>
+
+            <!-- Message Textarea -->
+            <div>
+                <label for="message" class="block text-lg">Your Message</label>
+                <textarea name="message" id="message" rows="4" required class="textarea textarea-bordered w-full bg-gray-50 text-gray-700"></textarea>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn bg-orange-600 text-white hover:bg-yellow-400">Send Message</button>
+            </div>
+            
+        </form>
+
+        
+    </div>
+</main>
+
+
+
+       </section>
     </main>
 
+    <!-- Modal for Search -->
+  
 
+    <!-- Modal for Adding Task -->
+ 
 
     <footer>
-    <footer class="footer footer-center bg-blue-950 text-orange-50 rounded p-10">
-  <nav class="grid grid-flow-col gap-4">
-    <a class="link link-hover">About us</a>
-    <a class="link link-hover">Contact</a>
-    
-  </nav>
-  <nav>
-    <div class="grid grid-flow-col gap-4">
-      <a>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          class="fill-current">
-          <path
-            d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-        </svg>
-      </a>
-      <a>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          class="fill-current">
-          <path
-            d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-        </svg>
-      </a>
-      <a>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          class="fill-current">
-          <path
-            d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-        </svg>
-      </a>
-    </div>
-  </nav>
-  <aside>
-    <p>Copyright ©2024 - All right reserved by <span class="text-yellow-300">Tanya</span></p>
-  </aside>
-</footer>
-
-
+        <div class="footer-content text-center mt-10">
+            <p>&copy; 2025 TaskNest. All rights reserved.</p>
+        </div>
     </footer>
 
+   
     
-    
+       
+   
+   
 </body>
-</html>
+</html> 

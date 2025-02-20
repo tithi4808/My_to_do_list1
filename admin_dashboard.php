@@ -60,28 +60,28 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
 <body class="bg-gray-100">
 
 <header>
-    <nav>
-        <div class="navbar bg-blue-950">
+<nav class="navbar bg-white">
             <div class="navbar-start">
-                <a class="btn btn-ghost text-xl">
-                    <span class="font-bold text-3xl text-yellow-300">Task</span><span class="mt-2 text-orange-50">Nest</span>
-                </a>
+                <a class="btn btn-ghost text-xl"><span class="font-bold text-3xl text-orange-600">Task</span><span class="mt-2 text-black font-bold">Nest</span></a>
             </div>
             <div class="navbar-end">
-                <ul class="menu menu-horizontal px-1 text-orange-50 text-lg">
-                    <li><a href="admin_logout.php">Admin Logout</a></li>
+                <ul class="menu menu-horizontal px-1 text-orange-600 font-bold text-base">
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="admin_dashboard">Dashboard</a></li>
+                    <li><a href="#users">Users</a></li>
+                    <li><a href="#messages">Messages</a></li>
+                    <li><a href="admin_logout.php">Logout</a></li>
                 </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
 </header>
 
 <main class="py-10">
     <div class="container mx-auto max-w-4xl">
-        <h1 class="text-4xl font-bold text-center text-blue-950 mb-8">Welcome, <?php echo $_SESSION['admin_username']; ?>!</h1>
+        <h1 class="text-4xl font-bold text-center text-black mb-8">Welcome, <?php echo $_SESSION['admin_username']; ?>!</h1>
 
         <!-- Users Table -->
-        <h2 class="text-2xl font-semibold text-center text-blue-800 mb-6">All Registered Users</h2>
+        <h2 id="users" class="text-2xl font-semibold text-center text-orange-600 mb-6">All Registered Users</h2>
         <div class="overflow-x-auto mb-12">
             <table class="table w-full table-auto border-collapse shadow-lg">
                 <thead>
@@ -94,7 +94,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
                         <th class="p-2 border px-4">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white">
                     <?php foreach ($users as $user): ?>
                         <tr class="text-center border-b">
                             <td class="p-2 border px-4"><?php echo $user['id']; ?></td>
@@ -104,7 +104,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
                             <td class="p-2 border px-4"><?php echo $user['date_of_birth']; ?></td>
                             <td class="p-2 border px-4">
                                 <!-- Delete Button -->
-                                <a href="admin_dashboard.php?delete_user_id=<?php echo $user['id']; ?>" class="btn btn-danger bg-red-500 text-white hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                                <a href="admin_dashboard.php?delete_user_id=<?php echo $user['id']; ?>" class="btn btn-danger bg-orange-600 text-white hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -113,7 +113,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Messages Table -->
-        <h2 class="text-2xl font-semibold text-center text-blue-800 mb-6">User Messages</h2>
+        <h2 id="messages" class="text-2xl font-semibold text-center text-blue-800 mb-6">User Messages</h2>
         <div class="overflow-x-auto">
             <table class="table w-full table-auto border-collapse shadow-lg">
                 <thead>
@@ -126,7 +126,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
                         <th class="p-2 border px-4">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white">
                     <?php foreach ($messages as $message): ?>
                         <tr class="text-center border-b">
                             <td class="p-2 border px-4"><?php echo $message['id']; ?></td>
@@ -136,7 +136,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
                             <td class="p-2 border px-4"><?php echo $message['date_time']; ?></td>
                             <td class="p-2 border px-4">
                                 <!-- Delete Button for Messages -->
-                                <a href="admin_dashboard.php?delete_message_id=<?php echo $message['id']; ?>" class="btn btn-danger bg-red-500 text-white hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
+                                <a href="admin_dashboard.php?delete_message_id=<?php echo $message['id']; ?>" class="btn btn-danger bg-orange-600 text-white hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -145,9 +145,7 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Logout Button -->
-        <div class="text-center mt-6">
-            <a href="admin_logout.php" class="btn bg-blue-950 text-orange-50 hover:bg-blue-700">Logout</a>
-        </div>
+       
     </div>
 </main>
 

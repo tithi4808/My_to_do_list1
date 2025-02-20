@@ -6,38 +6,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
     $date_of_birth = $_POST['date_of_birth'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    // Check if password contains only numbers
-    if (!ctype_digit($_POST['password'])) {
+    if (!ctype_digit($password)) {
         echo "Password should contain only numbers.";
         exit;
     }
 
-    // Check if email already exists in the database
+    if ($password !== $confirm_password) {
+        echo "Passwords do not match.";
+        exit;
+    }
+
     $stmt = $conn->prepare("SELECT COUNT(*) FROM users1 WHERE email = ?");
     $stmt->execute([$email]);
     $email_count = $stmt->fetchColumn();
 
     if ($email_count > 0) {
-        // Email already exists, show error message
         echo "<p class='text-red-500'>The email address is already registered. Please use a different email.</p>";
         exit;
     }
     
-    // Hash the password before saving it
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Prepare the SQL statement to insert the user data into the database
-    $stmt = $conn->prepare("INSERT INTO users1 (first_name, last_name, email, date_of_birth, password) VALUES (?, ?, ?, ?, ?)");
-    
-    // Execute the prepared statement
-    $stmt->execute([$first_name, $last_name, $email, $date_of_birth, $password]);
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+        $image = $_FILES['image'];
+        $image_name = time() . '_' . $image['name'];
+        $image_tmp_name = $image['tmp_name'];
+        $image_path = 'uploads/' . $image_name;
 
-    // After the insertion is successful, redirect to login page
+        move_uploaded_file($image_tmp_name, $image_path);
+    } else {
+        $image_path = '';
+    }
+
+    $stmt = $conn->prepare("INSERT INTO users1 (first_name, last_name, email, date_of_birth, password, image) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$first_name, $last_name, $email, $date_of_birth, $password, $image_path]);
+
     header("Location: login.php");
-    exit; // Always call exit() after header() to ensure the script doesn't continue executing
+    exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,80 +61,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-   <header>
-   
-   </header>
-   <main>
-   <div class='grid  rounded-full lg:grid-cols-2 lg:m-10'>
-           <div class='flex rounded-full  justify-center items-center'>
-                <img class='pt-6 rounded-full h-full w-full ' src="https://i.postimg.cc/9ftm9wnQ/7677-jpg-wh860.jpg" alt="" />
-           </div>
-           <div class="hero min-h-screen bg-base-100">
-  <div class="hero-content flex-col">
-    <div class="text-center lg:text-left">
-       <h1 class='text-4xl text-blue-950 font-bold mb-2'>Want to Join <span class="font-bold text-4xl text-yellow-500">Task </span>Nest!!!</h1>
-      <h1 class=" font-bold mb-4 text-lg text-center "><span class='text-orange-500'>Register here!</span></h1>
-      
-    </div>
-    <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-white">
-        <form action="" method="POST" class="card-body">
-            <!-- Display error message -->
-            <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $email_count > 0): ?>
-                <p class="text-red-500 flex justify-center items-center">The email address is already registered. Please use a different email.</p>
-            <?php endif; ?>
-        
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Enter Your First Name</span>
-          </label>
-          <input type="text" name="first_name" placeholder="First Name" required class="block w-full p-2 mb-4 border">
-          
-        </div>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Enter Your Last Name</span>
-          </label>
-          <input type="text" name="last_name" placeholder="Last Name" required class="block w-full p-2 mb-4 border">
-          
-        </div>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Enter Your Email ID</span>
-          </label>
-         
-          <input type="email" name="email" placeholder="Email" required class="block w-full p-2 mb-4 border">
-
-          
-        </div>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Enter Your Date Of Birth</span>
-          </label>
-          <input type="date" name="date_of_birth" required class="block w-full p-2 mb-4 border">
-          
-        </div>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Enter Password</span>
-          </label>
-          <input type="password" name="password" placeholder="Password" required class="block w-full p-2 mb-4 border" pattern="\d*" title="Please enter numbers only">
-          
-        </div>
-        <div class="form-control mt-6">
-        <button type="submit" class="bg-blue-950 text-orange-50 p-2 rounded">Register</button>
-        </div>
-        
-        <p class='mt-4 text-sm text-center'>Already have an account? Please <span> <a class='text-red-500 hover:underline' href="login.php">Login</a> </span> </p>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-2xl p-8 bg-white shadow-lg rounded-lg">
+        <div class=""><h1 class="text-3xl font-bold text-center text-black mb-10">Register for <span class="text-orange-600">Task Nest</span></h1></div>
+        <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium">First Name</label>
+                    <input type="text" name="first_name" class="w-full p-2 border rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Last Name</label>
+                    <input type="text" name="last_name" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium">Email</label>
+                    <input type="email" name="email" class="w-full p-2 border rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Date of Birth</label>
+                    <input type="date" name="date_of_birth" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium">Password</label>
+                    <input type="password" name="password" class="w-full p-2 border rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Confirm Password</label>
+                    <input type="password" name="confirm_password" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Upload Profile Image</label>
+                <input type="file" name="image" class="w-full p-2 border rounded">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="px-8 py-2   text-white bg-blue-600 rounded hover:bg-orange-500">Register</button>
+            </div>
+            <p class="text-sm text-center">Already have an account? <a href="login.php" class="text-red-500 hover:underline">Login</a></p>
         </form>
     </div>
-  </div>
-  
-</div>
-        </div>
-   </main>
-   <footer>
-
-   </footer>
 </body>
-</html>
+</html>  
