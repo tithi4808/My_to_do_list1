@@ -66,8 +66,8 @@ $messages = $stmt_messages->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="navbar-end">
                 <ul class="menu menu-horizontal px-1 text-orange-600 font-bold text-base">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="admin_dashboard">Dashboard</a></li>
+                    <li><a href="adminHome.php">Home</a></li>
+                    <li><a href="admin_dashboard.php">Dashboard</a></li>
                     <li><a href="#users">Users</a></li>
                     <li><a href="#messages">Messages</a></li>
                     <li><a href="admin_logout.php">Logout</a></li>

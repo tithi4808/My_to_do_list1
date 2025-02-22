@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare("DELETE FROM todo WHERE id = ?");
     $stmt->execute([$id]);
 
-    header("Location: index.php");
+    header("Location: home.php");
     exit;
 }
 ?>

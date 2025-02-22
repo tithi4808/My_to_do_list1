@@ -164,9 +164,9 @@ if (isset($_SESSION['user1_id'])) {
             <h2 class="text-2xl font-bold mb-4">Search Tasks</h2>
             <form id="searchForm">
                 <input type="text" id="searchQuery" placeholder="Search tasks..." class="w-full p-2 mb-4 border border-gray-300 rounded-md" required>
-                <button type="submit" class="btn btn-primary w-full">Search</button>
+                <button type="submit" class="btn  bg-orange-500 text-white w-full">Search</button>
             </form>
-            <button class="btn btn-secondary mt-4 w-full" id="closeSearchModal">Close</button>
+            <button class="btn bg-blue-500 text-white mt-4 w-full" id="closeSearchModal">Close</button>
         </div>
     </div>
 
@@ -193,9 +193,9 @@ if (isset($_SESSION['user1_id'])) {
                 </select>
 
                 <input type="date" name="due_date" class="w-full p-2 mb-4 border border-gray-300 rounded-md" required>
-                <button type="submit" class="btn btn-secondary bg-white text-black border-2 border-orange-300 mt-4 w-full" >Add Task</button>
+                <button type="submit" class="btn bg-white text-black border-2 border-orange-300 mt-4 w-full" >Add Task</button>
             </form>
-            <button class="btn btn-secondary bg-white text-black border-2 border-orange-300 mt-4 w-full" id="closeTaskModal">Close</button>
+            <button class="btn bg-white text-black  border-2 border-orange-300 mt-4 w-full" id="closeTaskModal">Close</button>
         </div>
     </div>
 

@@ -39,12 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name']) && !empty($_P
             </div>
             <div class="navbar-end">
                 <ul class="menu menu-horizontal px-1 text-orange-600 font-bold text-base">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="#about">About us</a></li>
-                    <li><a href="#contact">Contact us</a></li>
-                    <li><a href="login.php">Login</a></li>
-                    <li><a href="register.php">Register</a></li>
-                    <li><a href="admin_login.php">Admin</a></li>
+                    <li><a href="adminHome.php">Home</a></li>
+                    <li><a href="admin_dashboard.php">Dashboard</a></li>
+                    
+                    <li><a href="login.php">User Login</a></li>
+                    <li><a href="register.php">User Registration</a></li>
+                   
                 </ul>
             </div>
         </nav>

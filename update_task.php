@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     // Update the task with new title and description
     $stmt = $conn->prepare("UPDATE todo SET title = ?, description = ? WHERE id = ?");
     if ($stmt->execute([$title, $description, $id])) {
-        header("Location: index.php"); // Redirect to main page after update
+        header("Location: home.php"); // Redirect to main page after update
         exit;
     } else {
         echo "Error updating task!";
@@ -46,23 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 </head>
 <body>
     <header>
-    <nav>
-            <div class="navbar bg-blue-950">
-            <div class="navbar-start ">
-            <a class="btn btn-ghost text-xl"><Span class="font-bold text-3xl text-yellow-300">Task</Span><span class="mt-2 text-orange-50">Nest</span></a>
-            
-            </div>
-            <div class="navbar-end">
-            <ul class="menu menu-horizontal px-1 text-orange-50 text-lg">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact us</a></li>
-            <li><a href="logout.php">Logout</a></li>
-            
-            </ul>
-        </div>
-        </div>
-        </nav>
+    
     </header>
     <main>
     <div class="flex items-center gap-12 justify-center min-h-screen">

@@ -53,48 +53,60 @@ $params = [$user_id];
             if (!empty($task['due_date'])) {
                 
                 $due_date = new DateTime($task['due_date']);
-                $remaining_date = $due_date->diff(new DateTime())->days + 1 ;
+                $remaining_date = $due_date->diff(new DateTime())->days +1 ;
 
             }
+            $priorityColor = "text-blue-500"; // Default for Low priority
+            if ($task['priority'] == "Medium") {
+                $priorityColor = "text-green-500";
+            } elseif ($task['priority'] == "High") {
+                $priorityColor = "text-red-500";
+            }
 
-            echo "<div class='bg-red-50 w-full h-60 border-2 border-orange-50 p-4 rounded-xl shadow-md'>
-                    <div class=''><div class='font-bold text-xl mb-1 text-black'>" . htmlspecialchars($task['title']) . "</div>
+            echo "<div class='bg-red-50 w-full  border-2 border-orange-50 p-4 rounded-xl shadow-md'>
+                   <div class='60'> <div class=''><div class='font-bold text-xl mb-1 text-black'>" . htmlspecialchars($task['title']) . "</div>
                     <p class='text-xs text end mb-2'>" . htmlspecialchars($task['date_time']) . "</p></div>
                     
                     <div class='my-2 mx-2'>
                         <hr>
                     </div>
-                    <p class='mt-2 mb-2'>" . htmlspecialchars($task['description']) . "</p>
-                    
-                    
-                    
-                    <!-- Remaining Time -->
-                    <p class='text-sm text-gray-600 mt-2'> $remaining_date days to go.</p>
+                    <div class=' h-28'> <p class='mt-2 mb-2'>" . htmlspecialchars($task['description']) . "</p>
+                     <p class='mt-2 mb-2'><span class='text-sm font-bold'>Due Time</span> : <span>". htmlspecialchars($task['due_date']) ."</span></p>
+                   </div>
+                    </div>
+                    <div class='my-2 mx-2'>
+                                            <hr>
+                                        </div>
 
-                    <!-- Priority -->
-                    <div class='mt-2'>
-                        <span class='font-semibold text-sm'>
-                            Priority:
-                            <span>" . htmlspecialchars($task['priority']) . "</span>
+                   
+                    
+
+                    <div class='flex   justify-between '>
+                    
+                     <div class='  mt-4'>
+                         <span class='font-bold text-sm'>
+                    <span class='$priorityColor'>" . htmlspecialchars($task['priority']) . "</span>
                         </span>
                     </div>
-
-                    <!-- Mark as Read Checkbox -->
                     
-
-                    <div class='flex items-end justify-end mt-2'>
+                        <div class='flex gap-2'>
                         <form action='update_task.php' method='GET' class='inline'>
                             <input type='hidden' name='id' value='" . $task['id'] . "'>
-                            <button type='submit' class='flex items-end rounded-md px-2 ml-2 bg-blue-500 text-white p-1'>
-                                <i class='fas fa-edit'></i> Update Task
+                            <button type='submit' class='flex items-end rounded-md   text-black'>
+                                  <img class=' pt-4 px-2 w-12 h-10 '
+                        src='https://i.postimg.cc/DZbFhgPj/edit.png'
+                        alt='Admin' />
                             </button>
                         </form>
                         <form action='delete_task.php' method='POST' class='inline' onsubmit='return confirmDelete();'>
                             <input type='hidden' name='id' value='" . $task['id'] . "'>
-                            <button type='submit' class='flex items-end rounded-md px-2 ml-2 bg-red-500 text-white p-1'>
-                                <i class='fas fa-trash-alt'></i> Delete Task
+                            <button type='submit' class='flex items-end rounded-md    text-black'>
+                                <img class=' pt-4 px-2 w-12 h-10 '
+                        src='https://i.postimg.cc/sxhFFgyt/delete.png'
+                        alt='Admin' />
                             </button>
                         </form>
+                        </div>
                     </div>
                   </div>";
         }
